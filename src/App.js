@@ -1,7 +1,8 @@
 import React from "react";
+import MainForm from "./components/MainForm";
 
 const App = () => {
-  return <div>App</div>;
+  return <MainForm />;
 };
 
 export default App;
