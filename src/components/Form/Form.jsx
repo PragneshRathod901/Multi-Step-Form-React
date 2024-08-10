@@ -1,9 +1,7 @@
 import { TextField } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 
-const Form = ({ index, data, SetData }) => {
-  const [error, setError] = useState({});
-
+const Form = ({ index, data, SetData, error, setError }) => {
   const validate = (e) => {
     let error = "";
     if (!e.target.value) {
@@ -25,7 +23,7 @@ const Form = ({ index, data, SetData }) => {
 
   const HandleValueChange = (e) => {
     let err = validate(e);
-    if (err) {
+    if (err || error[e.target.id] !== err) {
       let newData = { ...error };
       newData[e.target.id] = err;
       setError(newData);

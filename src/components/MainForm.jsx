@@ -8,30 +8,31 @@ const steps = ["Personal Information", "Address Information", "Confirmation"];
 
 const MainForm = () => {
   const [activeStep, setActiveStep] = useState(0);
+  const [error, setError] = useState({});
   let [data, SetData] = useState(localStorage.getItem("formData") || {});
 
-  const checkNextEnabled = (_data, index) => {
+  const checkNextEnabled = (_data, _err, index) => {
     if (index === 0) {
       return (
-        _data.name !== undefined &&
-        _data.email !== undefined &&
-        _data.phone !== undefined &&
-        _data.name !== "" &&
-        _data.email !== "" &&
-        _data.phone !== ""
+        !!_data.name &&
+        !!_data.email &&
+        !!_data.phone &&
+        !_err.name &&
+        !_err.email &&
+        !_err.phone
       );
     } else if (index === 1) {
       return (
-        _data.add1 !== undefined &&
-        _data.add2 !== undefined &&
-        _data.city !== undefined &&
-        _data.zip !== undefined &&
-        _data.state !== undefined &&
-        _data.add1 !== "" &&
-        _data.add2 !== "" &&
-        _data.city !== "" &&
-        _data.zip !== "" &&
-        _data.state !== ""
+        !!_data.add1 &&
+        !!_data.add2 &&
+        !!_data.city &&
+        !!_data.zip &&
+        !!_data.state &&
+        !_err.add1 &&
+        !_err.add2 &&
+        !_err.city &&
+        !_err.zip &&
+        !_err.state
       );
     } else if (index === 2) {
       return true;
@@ -42,7 +43,7 @@ const MainForm = () => {
 
   //disabling or enabling next button
   useEffect(() => {
-    let tmp = checkNextEnabled(data, activeStep);
+    let tmp = checkNextEnabled(data, error, activeStep);
     if (tmp !== enableNext) {
       setEnableNext(tmp);
     }
@@ -50,25 +51,45 @@ const MainForm = () => {
 
   //getting data from local storage when step Changes
   useEffect(() => {
-    SetData(localStorage.getItem("formData") || {});
+    try {
+      SetData(JSON.parse(localStorage.getItem("formData")) || {});
+    } catch (e) {
+      console.error(e);
+    }
   }, [activeStep]);
-
   const [enableNext, setEnableNext] = useState(
     checkNextEnabled(data, activeStep)
   );
 
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    if (activeStep === 2) {
+      HandleFinish();
+    } else {
+      handleSave();
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    }
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
-  
+  const handleSave = () => {
+    localStorage.setItem("formData", JSON.stringify(data));
+  };
+  const HandleFinish = () => {
+    localStorage.removeItem("formData");
+    setActiveStep(0);
+  };
   return (
     <div className="formContainer">
       <StepperUI steps={steps} activeStep={activeStep} />
-      <Form index={activeStep} data={data} SetData={SetData} />
+      <Form
+        index={activeStep}
+        data={data}
+        SetData={SetData}
+        error={error}
+        setError={setError}
+      />
       <div>
         <Button
           variant="contained"
