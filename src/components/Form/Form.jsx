@@ -1,4 +1,4 @@
-import { TextField } from "@mui/material";
+import { TextField, Box } from "@mui/material";
 import React from "react";
 
 const Form = ({ index, data, SetData, error, setError }) => {
@@ -37,7 +37,15 @@ const Form = ({ index, data, SetData, error, setError }) => {
   return (
     <div>
       {index === 0 ? (
-        <div>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            padding: "1em",
+            rowGap: "1em",
+            justifyContent: "center",
+          }}
+        >
           <TextField
             id="name"
             label="Name"
@@ -64,9 +72,17 @@ const Form = ({ index, data, SetData, error, setError }) => {
             error={!!error.phone}
             helperText={error.phone || ""}
           />
-        </div>
+        </Box>
       ) : index === 1 ? (
-        <div>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            padding: "1em",
+            rowGap: "1em",
+            justifyContent: "center",
+          }}
+        >
           <TextField
             id="add1"
             label="Address Line 1"
@@ -112,9 +128,17 @@ const Form = ({ index, data, SetData, error, setError }) => {
             error={!!error.zip}
             helperText={error.zip || ""}
           />
-        </div>
+        </Box>
       ) : (
-        <div>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            padding: "1em",
+            rowGap: "0.5em",
+            justifyContent: "center",
+          }}
+        >
           <div>{"Name : " + (data.name || "")}</div>
           <div>{"Email : " + (data.email || "")}</div>
           <div>{"Phone : " + (data.phone || "")}</div>
@@ -123,7 +147,7 @@ const Form = ({ index, data, SetData, error, setError }) => {
           <div>{"City : " + (data.city || "")}</div>
           <div>{"State : " + (data.state || "")}</div>
           <div>{"zip : " + (data.zip || "")}</div>
-        </div>
+        </Box>
       )}
     </div>
   );
